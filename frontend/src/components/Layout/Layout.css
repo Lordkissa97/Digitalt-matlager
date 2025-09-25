@@ -1,0 +1,43 @@
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f9fa;
+}
+
+.main-content {
+  flex: 1;
+  min-height: calc(100vh - 140px); /* Account for navbar and footer */
+}
+
+.app-footer {
+  background: #343a40;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  margin-top: auto;
+}
+
+.app-footer p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Global page styles */
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .main-content {
+    min-height: calc(100vh - 120px);
+  }
+  
+  .page-container {
+    padding: 1rem;
+  }
+}
