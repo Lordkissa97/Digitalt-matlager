@@ -1,178 +1,180 @@
-# Digitalt-matlager# 🍽️ Digitalt Matlager App
+# 🍽️ Digitalt Matlager App
 
 Et omfattende digitalt matlager-system med AI-drevne oppskriftsanbefalinger.
-En applikasjon hvor bruker kan legge inn og ha sine matvarer fra husholdning liggende på app og få forslag til hva man kan lage av ingridienser som man har og eventuelt mangler kan legges til i handleliste
+En applikasjon hvor bruker kan legge inn og ha sine matvarer
 
-## 🏗️ Arkitektur
+## 🐳 Docker (Avansert)
 
-Denne applikasjonen består av 4 hovedtjenester:
-
-- **Frontend** (React/Next.js) - Brukergrensesnitt på port 3000
-- **API** (NestJS) - Backend REST API på port 3001  
-- **AI-tjeneste** (FastAPI) - Oppskriftsanbefalinger på port 5000
-- **Database** (PostgreSQL) - Datalagring på port 5432
-
-## 🚀 Hurtigstart
-
-### Forutsetninger
-
-- Node.js 18+
-- Python 3.11+
-- Docker & Docker Compose
-- Git
-
-### 1. Klon Repository
-
-```bash
-git clone <repository-url>
-cd digital-pantry-app
-```
-
-### 2. Miljøoppsett
-
-Kopier eksempel miljøfiler og konfigurer:
-
-```bash
-# API-tjeneste
-cp api/.env.example api/.env
-# Rediger api/.env med dine database-opplysninger og API-nøkler
-
-# AI-tjeneste  
-cp recipe-ai/.env.example recipe-ai/.env
-# Rediger recipe-ai/.env med dine AI-tjeneste API-nøkler
-```
-
-### 3. Start Database
-
+### Kun database (anbefalt for utvikling):
 ```bash
 cd docker
 docker-compose -f docker-compose.dev.yml up -d
 ```
 
-### 4. Start Alle Tjenester
+### Full Docker-oppsett (alle tjenester):
+```bash
+# Bygg og start alle tjenester i Docker
+cd docker  
+docker-compose -f docker-compose.dev.yml up --build
+```
+
+
+## 🏗️ Arkitektur
+
+Denne applikasjonen består av 3 hovedtjenester:
+
+- **Frontend** (React) - Brukergrensesnitt på port 3000
+- **API** (NestJS) - Backend REST API på port 3001  
+- **AI-tjeneste** (FastAPI) - Oppskriftsanbefalinger på port 8000
+- **Database** (PostgreSQL) - Datalagring på port 5432
+
+## 🚀 Kom i gang - 3 enkle steg
+
+### Forutsetninger
+- [Node.js 18+](https://nodejs.org/) 
+- [Python 3.11+](https://www.python.org/downloads/)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) 
+- [Git](https://git-scm.com/downloads)
+
+---
+
+### **Steg 1: Klon og installer**
+
+```bash
+# Klon repository
+git clone https://github.com/Lordkissa97/Digitalt-matlager.git
+cd Digitalt-matlager
+
+# Installer frontend avhengigheter
+cd frontend
+npm install
+
+# Installer API avhengigheter  
+cd ../api
+npm install
+
+# Installer Python avhengigheter
+cd ../recipe-ai
+pip install fastapi uvicorn
+```
+
+### **Steg 2: Start database**
+
+```bash
+# Fra prosjektets rotmappe
+cd docker
+docker-compose -f docker-compose.dev.yml up -d
+
+# Verifiser at database kjører
+docker ps
+```
+
+### **Steg 3: Start alle tjenester**
+
+Åpne **3 terminaler** og kjør disse kommandoene:
 
 **Terminal 1 - Frontend:**
 ```bash
 cd frontend
-npm install
 npm start
-# Kjører på http://localhost:3000
+# ✅ Kjører på http://localhost:3000
 ```
 
 **Terminal 2 - API:**
 ```bash
 cd api
-npm install
 npm run start:dev
-# Kjører på http://localhost:3001
+# ✅ Kjører på http://localhost:3001
 ```
 
 **Terminal 3 - AI-tjeneste:**
 ```bash
 cd recipe-ai
-pip install fastapi uvicorn
-python -m uvicorn digital-pantry-app.recipe-ai.main:app --reload --port 5000
-# Kjører på http://localhost:5000
+python -m uvicorn main:app --reload --port 8000
+# ✅ Kjører på http://localhost:8000
 ```
 
-### 5. Verifiser Tjenester
+### **🎉 Ferdig!**
 
-- Frontend: http://localhost:3000
-- API: http://localhost:3001
-- AI-tjeneste: http://localhost:5000/ping
-- Database: localhost:5432
+Åpne http://localhost:3000 i nettleseren din
 
 ## 📁 Prosjektstruktur
 
 ```
-digital-pantry-app/
-├── frontend/           # React/Next.js frontend
-├── api/               # NestJS backend API
+Digitalt-matlager/
+├── frontend/           # React frontend applikasjon
+├── api/               # NestJS backend API  
 ├── recipe-ai/         # FastAPI AI-tjeneste
-├── db/               # Database migrasjoner og seed-data
 ├── docker/           # Docker konfigurasjoner
-├── .github/          # GitHub Actions workflows
+├── .github/          # GitHub Actions CI/CD
 └── README.md
 ```
 
-## 🔧 Utvikling
+## 🔍 Test at alt fungerer
 
-### Miljøvariabler
+### Hurtige tester:
 
-#### API-tjeneste (`api/.env`)
 ```bash
-DATABASE_URL=postgresql://dev:dev@localhost:5432/pantry_dev
-JWT_SECRET=din-jwt-hemmelighet
-PORT=3001
-OPENAI_API_KEY=din-openai-nøkkel
+# Test frontend build
+cd frontend && npm run build
+
+# Test API build  
+cd api && npm run build
+
+# Test AI-tjeneste
+cd recipe-ai && python -c "from main import app; print('✅ AI-tjeneste fungerer!')"
 ```
 
-#### AI-tjeneste (`recipe-ai/.env`)
+
+## 🔧 Feilsøking
+
+### ❌ Vanlige problemer og løsninger
+
+**"Tjenester starter ikke"**
 ```bash
-PORT=5000
-DATABASE_URL=postgresql://dev:dev@localhost:5432/pantry_dev
-OPENAI_API_KEY=din-openai-nøkkel
-SPOONACULAR_API_KEY=din-spoonacular-nøkkel
+# Sjekk at avhengigheter er installert
+cd frontend && npm install
+cd api && npm install  
+cd recipe-ai && pip install fastapi uvicorn
 ```
 
-### API Endepunkter
-
-#### API-tjeneste (NestJS)
-- `GET /` - Helsekontroll
-- `GET /api/pantry` - Hent matlagerelementær
-- `POST /api/pantry` - Legg til matlagerelementær
-- `PUT /api/pantry/:id` - Oppdater matlagerelementær
-- `DELETE /api/pantry/:id` - Slett matlagerelementær
-
-#### AI-tjeneste (FastAPI)
-- `GET /ping` - Helsekontroll
-- `POST /recipes/recommend` - Få oppskriftsanbefalinger
-- `POST /recipes/generate` - Generer ny oppskrift
-- `POST /nutrition/analyze` - Analyser næringsinnhold
-
-### Database Schema
-
-```sql
--- Matlager elementer
-CREATE TABLE pantry_items (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    quantity INTEGER,
-    unit VARCHAR(50),
-    expiry_date DATE,
-    category VARCHAR(100),
-    created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
-);
-
--- Oppskrifter  
-CREATE TABLE recipes (
-    id SERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    description TEXT,
-    ingredients JSONB,
-    instructions TEXT[],
-    prep_time INTEGER,
-    cook_time INTEGER,
-    servings INTEGER,
-    difficulty VARCHAR(20),
-    created_at TIMESTAMP DEFAULT NOW()
-);
-```
-
-## 🧪 Testing
-
-### Kjør Alle Tester
+**"Database tilkoblingsfeil"**
 ```bash
-# Frontend tester
-cd frontend && npm test
+# Sjekk om Docker kjører
+docker ps
 
-# API tester  
-cd api && npm run test
-
-# AI-tjeneste tester
-cd recipe-ai && python -m pytest
+# Restart database
+cd docker
+docker-compose -f docker-compose.dev.yml down
+docker-compose -f docker-compose.dev.yml up -d
 ```
+
+**"Port allerede i bruk"**
+```bash
+# Finn og stopp prosess på port (eks. 3000)
+# Windows:
+netstat -ano | findstr :3000
+taskkill /PID <PID-nummer> /F
+
+# macOS/Linux:
+lsof -ti:3000 | xargs kill -9
+```
+
+**"AI-tjeneste importfeil"**
+```bash
+# Sørg for at du er i riktig mappe
+cd recipe-ai
+python -c "from main import app; print('OK')"
+```
+
+### 💡 Tips for utvikling
+
+- **Hot reload**: Alle tjenester støtter automatisk gjenstart ved kodeendringer
+- **API-dokumentasjon**: Besøk http://localhost:8000/docs for interaktiv FastAPI-dokumentasjon  
+- **Database-verktøy**: Bruk verktøy som pgAdmin eller DBeaver for å utforske databasen
+- **Logger**: Sjekk terminal-output for detaljerte feilmeldinger
+
+## 🧪 Testing og CI/CD
 
 ### GitHub Actions
 
